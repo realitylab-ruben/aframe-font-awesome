@@ -133,7 +133,7 @@
 	AFRAME.registerPrimitive('a-font-awesome', {
 	    defaultComponents: {
 	        'geometry': { 'primitive': 'plane' },
-	        'material': { 'transparent': 'true' },
+	        'material': { 'side': 'double', 'transparent': 'true' },
 	    },
 
 	    // Maps HTML attributes to the `ocean` component's properties.

@@ -36,7 +36,7 @@ The `font-awesome` component will generate an image containing a single font-awe
 
 ### Primitive
 
-The `a-font-awesome` primitive can be used to help the creation of a font-awesome. It will draw the icon on top of a plane primitive with the material's transparency set to true.
+The `a-font-awesome` primitive is available for an easier way to create a font-awesome entity. It will draw the icon on top of a plane primitive with the material's side set to double and transparency set to true.
 
 #### Example
 
@@ -48,7 +48,7 @@ The `a-font-awesome` primitive can be used to help the creation of a font-awesom
 
 The `font-awesome` system keeps track for when the `FontAwesome` font-family is available, so that the components known when they can start drawing.
 
-It also contains the functionality to draw the icon on a canvas and return it to the component. The results are stored in a cache to avoid icons being redrawn twice.
+It also contains the functionality to draw the icon on a canvas and returns it to the component. The results are stored in a cache to avoid icons being redrawn twice.
 
 #### Events
 
