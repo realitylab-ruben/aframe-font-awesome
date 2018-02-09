@@ -45,6 +45,10 @@
 /***/ function(module, exports) {
 
 	AFRAME.registerSystem('font-awesome', {
+	    schema: {
+	        timeout: { type: 'number', default: 2500 }
+	    },
+
 	    cache: {},
 	    promises: {},
 
@@ -81,28 +85,51 @@
 	            return Promise.resolve();
 	        }
 
+	        if(this.isFontAwesomeAvailable()) {
+	            this.onLoaded();
+	            return Promise.resolve();
+	        }
+
 	        if(!this.promise) {
 	            this.promise = new Promise((resolve) => {
-	                const func = (fontFaceSetEvent) => {
-	                    if (fontFaceSetEvent.fontfaces.find((fontface) => fontface.family.indexOf('FontAwesome') > -1)) {
-	                        document.fonts.removeEventListener('loadingdone', func)
+	                if(this.canCheckDocumentFonts()) {
+	                    const func = () => {
+	                        if (this.isFontAwesomeAvailable()) {
+	                            document.fonts.removeEventListener('loadingdone', func)
+	                            this.onLoaded(resolve);
+	                        }
+	                    };
+	                    document.fonts.addEventListener('loadingdone', func);
+	                } else {
+	                    console.warn('aframe-font-awesome: Unable to determine when FontAwesome stylesheet is loaded. Drawing fonts after ' + this.data.timeout + ' seconds');
+	                    console.warn('aframe-font-awesome: You can change the timeout by adding "font-awesome="timeout: $timeout" to your a-scene')
+
+	                    window.setTimeout(() => {
 	                        this.onLoaded(resolve);
-	                    }
-	                };
-	                document.fonts.addEventListener('loadingdone', func);
+	                    }, this.data.timeout);
+	                }
 	            });
 	        }
 
 	        return this.promise;
 	    },
 
+	    isFontAwesomeAvailable: function() {
+	        return this.canCheckDocumentFonts() && document.fonts.check('1px FontAwesome');
+	    },
+
+	    canCheckDocumentFonts: function() {
+	        return typeof document.fonts !== 'undefined' && document.fonts.check;
+	    },
+
 	    onLoaded: function(resolve) {
 	        this.el.emit('font-awesome.loaded');
 	        this.loaded = true;
 
-	        resolve();
-
-	    },
+	        if(resolve) {
+	            resolve();
+	        }
+	    }
 	});
 
 	AFRAME.registerComponent('font-awesome', {
